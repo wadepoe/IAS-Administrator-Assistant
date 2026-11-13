@@ -1,0 +1,368 @@
+{
+  "servers": {
+    "ias-identity-directory": {
+      "mcp_server_name": "sap.mcp/sap_identity_authentication_service_identity_directory_scim_api",
+      "description": "MCP server for SAP IAS Identity Directory SCIM API — user search, retrieval, password reset, account unlock, and group membership management.",
+      "tools": {
+        "searchUsers": {
+          "description": "Search for users in the IAS Identity Directory using SCIM filter syntax.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "filter": {
+                "type": "string",
+                "description": "SCIM filter expression, e.g. emails.value eq \"user@example.com\" or displayName co \"John\""
+              },
+              "count": {
+                "type": "integer",
+                "description": "Maximum number of results to return (max 100)"
+              },
+              "startIndex": {
+                "type": "integer",
+                "description": "1-based index for pagination"
+              }
+            },
+            "required": []
+          },
+          "mock_response": {
+            "totalResults": 1,
+            "Resources": [
+              {
+                "id": "user-abc-123",
+                "userName": "john.doe@company.com",
+                "displayName": "John Doe",
+                "active": true,
+                "emails": [
+                  { "value": "john.doe@company.com", "primary": true }
+                ],
+                "groups": [
+                  { "value": "grp-001", "display": "EmployeeGroup" }
+                ],
+                "meta": { "status": "active" }
+              }
+            ]
+          }
+        },
+        "getUser": {
+          "description": "Retrieve full details for a specific user including status, group memberships, and all attributes.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string",
+                "description": "The IAS SCIM user ID"
+              }
+            },
+            "required": ["userId"]
+          },
+          "mock_response": {
+            "id": "user-abc-123",
+            "userName": "john.doe@company.com",
+            "displayName": "John Doe",
+            "active": true,
+            "emails": [
+              { "value": "john.doe@company.com", "primary": true }
+            ],
+            "groups": [
+              { "value": "grp-001", "display": "EmployeeGroup" },
+              { "value": "grp-002", "display": "HRUsers" }
+            ],
+            "meta": { "status": "active" }
+          }
+        },
+        "updateUser": {
+          "description": "Partially update a user. Used to unlock accounts (set active=true) and update other attributes.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "userId": { "type": "string", "description": "The IAS SCIM user ID" },
+              "schemas": { "type": "array", "items": { "type": "string" } },
+              "Operations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "op": { "type": "string" },
+                    "path": { "type": "string" },
+                    "value": {}
+                  }
+                }
+              }
+            },
+            "required": ["userId", "Operations"]
+          },
+          "mock_response": {
+            "id": "user-abc-123",
+            "userName": "john.doe@company.com",
+            "displayName": "John Doe",
+            "active": true,
+            "meta": { "status": "active" }
+          }
+        },
+        "resetUserPassword": {
+          "description": "Trigger a password reset for a specific user.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "userId": { "type": "string", "description": "The IAS user ID" },
+              "sendEmail": { "type": "boolean", "description": "Send password reset email to user" }
+            },
+            "required": ["userId"]
+          },
+          "mock_response": {
+            "status": "success",
+            "message": "Password reset triggered for user user-abc-123"
+          }
+        },
+        "searchGroups": {
+          "description": "Search for groups in IAS. Supports SCIM filter syntax.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "filter": { "type": "string", "description": "SCIM filter, e.g. displayName eq \"Admins\"" },
+              "count": { "type": "integer", "description": "Maximum number of results" }
+            },
+            "required": []
+          },
+          "mock_response": {
+            "totalResults": 2,
+            "Resources": [
+              { "id": "grp-001", "displayName": "EmployeeGroup", "members": [] },
+              { "id": "grp-002", "displayName": "HRUsers", "members": [] }
+            ]
+          }
+        },
+        "updateGroupMembers": {
+          "description": "Add or remove group members using SCIM PATCH with operations.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "groupId": { "type": "string", "description": "The IAS group ID" },
+              "schemas": { "type": "array", "items": { "type": "string" } },
+              "Operations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "op": { "type": "string", "enum": ["add", "remove"] },
+                    "path": { "type": "string" },
+                    "value": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            },
+            "required": ["groupId", "Operations"]
+          },
+          "mock_response": {
+            "id": "grp-001",
+            "displayName": "EmployeeGroup",
+            "members": [
+              { "value": "user-abc-123", "display": "John Doe" }
+            ]
+          }
+        }
+      }
+    },
+    "ips-job-management": {
+      "mcp_server_name": "sap.mcp/sap_identity_provisioning_service_job_management_api",
+      "description": "MCP server for SAP IPS Job Management API — trigger Read/Resync jobs and retrieve provisioning logs.",
+      "tools": {
+        "listProvisioningSystems": {
+          "description": "Retrieve the list of configured provisioning source systems in IPS.",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          },
+          "mock_response": {
+            "systems": [
+              { "id": "sys-s4-cloud", "name": "SAP S/4HANA Cloud", "type": "SAP S/4HANA Cloud", "status": "active" },
+              { "id": "sys-hr", "name": "SAP SuccessFactors", "type": "SAP SuccessFactors", "status": "active" }
+            ]
+          }
+        },
+        "triggerReadJob": {
+          "description": "Start a Read job for the specified provisioning source system.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "systemId": { "type": "string", "description": "The ID or name of the provisioning source system" }
+            },
+            "required": ["systemId"]
+          },
+          "mock_response": {
+            "id": "job-read-20261113-001",
+            "type": "READ",
+            "status": "RUNNING",
+            "startTime": "2026-11-13T15:00:00Z",
+            "systemId": "sys-s4-cloud"
+          }
+        },
+        "triggerResyncJob": {
+          "description": "Start a Resync job for the specified provisioning source system.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "systemId": { "type": "string", "description": "The ID or name of the provisioning source system" }
+            },
+            "required": ["systemId"]
+          },
+          "mock_response": {
+            "id": "job-resync-20261113-001",
+            "type": "RESYNC",
+            "status": "RUNNING",
+            "startTime": "2026-11-13T15:05:00Z",
+            "systemId": "sys-s4-cloud"
+          }
+        },
+        "getProvisioningLogs": {
+          "description": "Retrieve recent provisioning job run logs for a specific system.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "systemId": { "type": "string", "description": "The provisioning system ID" },
+              "count": { "type": "integer", "description": "Maximum number of log entries (max 100)" }
+            },
+            "required": ["systemId"]
+          },
+          "mock_response": {
+            "logs": [
+              {
+                "jobId": "job-read-20261113-001",
+                "systemId": "sys-s4-cloud",
+                "systemName": "SAP S/4HANA Cloud",
+                "jobType": "READ",
+                "status": "SUCCESS",
+                "startTime": "2026-11-13T14:00:00Z",
+                "endTime": "2026-11-13T14:05:00Z",
+                "entitiesRead": 250,
+                "entitiesCreated": 3,
+                "entitiesUpdated": 12,
+                "entitiesDeleted": 0,
+                "entitiesFailed": 1,
+                "errors": [
+                  { "entityId": "user-xyz-999", "message": "User attribute 'department' exceeds maximum length." }
+                ],
+                "warnings": []
+              }
+            ],
+            "totalResults": 1
+          }
+        },
+        "getTransformation": {
+          "description": "Retrieve the current transformation configuration for a provisioning source or target system.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "systemId": { "type": "string", "description": "The ID or name of the provisioning system" },
+              "systemType": { "type": "string", "enum": ["source", "target"], "description": "source or target" }
+            },
+            "required": ["systemId"]
+          },
+          "mock_response": {
+            "systemId": "sys-s4-cloud",
+            "systemType": "source",
+            "lastModified": "2026-11-01T10:00:00Z",
+            "transformation": {
+              "user": [
+                { "sourcePath": "$.userName", "targetPath": "userName" },
+                { "sourcePath": "$.emails[0].value", "targetPath": "emails[0].value", "optional": true },
+                { "sourcePath": "$.displayName", "targetPath": "displayName", "optional": true },
+                { "sourcePath": "$.active", "targetPath": "active", "condition": "$.active == true" }
+              ],
+              "group": [
+                { "sourcePath": "$.displayName", "targetPath": "displayName" },
+                { "sourcePath": "$.members", "targetPath": "members", "optional": true }
+              ]
+            }
+          }
+        },
+        "updateTransformation": {
+          "description": "Replace the transformation configuration for a provisioning source or target system.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "systemId": { "type": "string", "description": "The ID or name of the provisioning system" },
+              "systemType": { "type": "string", "enum": ["source", "target"] },
+              "transformation": { "type": "object", "description": "Full replacement transformation JSON" }
+            },
+            "required": ["systemId", "transformation"]
+          },
+          "mock_response": {
+            "systemId": "sys-s4-cloud",
+            "systemType": "source",
+            "lastModified": "2026-11-13T15:30:00Z",
+            "transformation": {
+              "user": [
+                { "sourcePath": "$.userName", "targetPath": "userName" },
+                { "sourcePath": "$.emails[0].value", "targetPath": "emails[0].value", "optional": true }
+              ],
+              "group": []
+            }
+          }
+        },
+        "getAllProvisioningLogs": {
+          "description": "Retrieve recent provisioning job logs across all systems.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer", "description": "Maximum number of log entries (max 100)" }
+            },
+            "required": []
+          },
+          "mock_response": {
+            "logs": [
+              {
+                "jobId": "job-read-20261113-001",
+                "systemId": "sys-s4-cloud",
+                "systemName": "SAP S/4HANA Cloud",
+                "jobType": "READ",
+                "status": "SUCCESS",
+                "startTime": "2026-11-13T14:00:00Z",
+                "endTime": "2026-11-13T14:05:00Z",
+                "entitiesRead": 250,
+                "entitiesCreated": 3,
+                "entitiesUpdated": 12,
+                "entitiesDeleted": 0,
+                "entitiesFailed": 1,
+                "errors": [
+                  { "entityId": "user-xyz-999", "message": "User attribute 'department' exceeds maximum length." }
+                ],
+                "warnings": []
+              },
+              {
+                "jobId": "job-resync-20261112-001",
+                "systemId": "sys-hr",
+                "systemName": "SAP SuccessFactors",
+                "jobType": "RESYNC",
+                "status": "WARNING",
+                "startTime": "2026-11-12T10:00:00Z",
+                "endTime": "2026-11-12T10:30:00Z",
+                "entitiesRead": 1500,
+                "entitiesCreated": 0,
+                "entitiesUpdated": 1498,
+                "entitiesDeleted": 2,
+                "entitiesFailed": 0,
+                "errors": [],
+                "warnings": [
+                  { "entityId": "user-abc-100", "message": "Email address format is non-standard." }
+                ]
+              }
+            ],
+            "totalResults": 2
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "created_for_agent": "ias-administrator-agent",
+    "mock_mode": true,
+    "deterministic": true,
+    "total_servers": 2,
+    "total_tools": 13,
+    "generated_from": ["assets/ias-identity-directory-mcp-server/mcp-translation/translation.json", "assets/ips-job-management-mcp-server/mcp-translation/translation.json"],
+    "generation_date": "2026-11-13"
+  }
+}

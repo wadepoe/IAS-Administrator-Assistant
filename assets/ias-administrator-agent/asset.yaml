@@ -1,0 +1,45 @@
+apiVersion: asset.sap/v1
+kind: Asset
+type: agent
+
+metadata:
+  name: ias-administrator-agent
+  description: Conversational AI agent that helps IT helpdesk staff and IAM administrators manage users and provisioning in SAP Cloud Identity Services (IAS) and SAP Identity Provisioning (IPS) via natural language.
+  version: "1.0.0"
+
+provides:
+  apis:
+    - name: ias-administrator-agent
+      kind: a2a
+      ordId: customer.build:apiResource:ias-administrator-assistant-2cc77.ias-administrator-agent:v1
+
+container:
+  buildPath: .
+  port: 5000
+
+requires:
+  - name: ias-identity-directory-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:ias-administrator-assistant-2cc77.ias-identity-directory-mcp-server:v1
+  - name: ips-job-management-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:ias-administrator-assistant-2cc77.ips-job-management-mcp-server:v1
+
+probes:
+  startup:
+    path: /.well-known/agent.json
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 18
+  liveness:
+    path: /.well-known/agent.json
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readiness:
+    path: /.well-known/agent.json
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3

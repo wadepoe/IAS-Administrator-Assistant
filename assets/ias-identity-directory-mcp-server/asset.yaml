@@ -1,0 +1,21 @@
+apiVersion: asset.sap/v1
+kind: Asset
+type: mcp-server
+
+metadata:
+  name: ias-identity-directory-mcp-server
+  description: Exposes SAP IAS Identity Directory SCIM API operations as MCP tools for user search, retrieval, password reset, account unlock, and group membership management.
+  version: "1.0.0"
+  translation: mcp-translation/translation.json
+  apiSpec: mcp-translation/api-spec.json
+
+provides:
+  apis:
+    - name: ias-identity-directory-mcp-server
+      kind: mcp-server
+      ordId: customer.build:apiResource:ias-administrator-assistant-2cc77.ias-identity-directory-mcp-server:v1
+
+requires:
+  - name: ias-identity-directory-api
+    kind: api
+    ordId: customer.build:apiResource:ias-administrator-assistant-2cc77.ias-identity-directory-mcp-server:v1

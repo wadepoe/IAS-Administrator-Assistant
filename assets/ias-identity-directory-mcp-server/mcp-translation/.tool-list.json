@@ -1,0 +1,353 @@
+[
+  {
+    "name": "searchUsers",
+    "title": "searchUsers",
+    "description": "Search for users in the IAS Identity Directory using SCIM filter syntax. Supports filtering by email, display name, user ID, and other attributes.",
+    "openApiType": {
+      "operationId": "searchUsers",
+      "parameters": [
+        {
+          "name": "filter",
+          "description": "SCIM filter expression, e.g. emails.value eq \"user@example.com\" or displayName co \"John\"",
+          "in": "query",
+          "newParameterName": "filter"
+        },
+        {
+          "name": "count",
+          "description": "Maximum number of results to return (max 100)",
+          "in": "query",
+          "newParameterName": "count"
+        },
+        {
+          "name": "startIndex",
+          "description": "1-based index for pagination",
+          "in": "query",
+          "newParameterName": "startindex"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "getUser",
+    "title": "getUser",
+    "description": "Retrieve full details for a specific user including status, group memberships, and all attributes.",
+    "openApiType": {
+      "operationId": "getUser",
+      "parameters": [
+        {
+          "name": "userId",
+          "description": "The IAS SCIM user ID",
+          "in": "path",
+          "newParameterName": "userid"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "updateUser",
+    "title": "updateUser",
+    "description": "Partially update a user. Used to unlock accounts (set active=true) and update other attributes.",
+    "openApiType": {
+      "operationId": "updateUser",
+      "parameters": [
+        {
+          "name": "body",
+          "description": "",
+          "newParameterName": "body"
+        },
+        {
+          "name": "userId",
+          "description": "",
+          "in": "path",
+          "newParameterName": "userid"
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json"
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "resetUserPassword",
+    "title": "resetUserPassword",
+    "description": "Trigger a password reset for a specific user. Sends a reset email or resets to a new temporary password depending on tenant configuration.",
+    "openApiType": {
+      "operationId": "resetUserPassword",
+      "parameters": [
+        {
+          "name": "body",
+          "description": "",
+          "newParameterName": "body"
+        },
+        {
+          "name": "userId",
+          "description": "The IAS user ID",
+          "in": "path",
+          "newParameterName": "userid"
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json"
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "searchGroups",
+    "title": "searchGroups",
+    "description": "Search for groups in IAS. Supports SCIM filter syntax e.g. displayName eq \"Admins\".",
+    "openApiType": {
+      "operationId": "searchGroups",
+      "parameters": [
+        {
+          "name": "filter",
+          "description": "",
+          "in": "query",
+          "newParameterName": "filter"
+        },
+        {
+          "name": "count",
+          "description": "",
+          "in": "query",
+          "newParameterName": "count"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "updateGroupMembers",
+    "title": "updateGroupMembers",
+    "description": "Update group membership by adding or removing members using SCIM PATCH with operations.",
+    "openApiType": {
+      "operationId": "updateGroupMembers",
+      "parameters": [
+        {
+          "name": "body",
+          "description": "",
+          "newParameterName": "body"
+        },
+        {
+          "name": "groupId",
+          "description": "",
+          "in": "path",
+          "newParameterName": "groupid"
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json"
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  }
+]

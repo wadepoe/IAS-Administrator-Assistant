@@ -1,0 +1,362 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SAP Identity Provisioning Service - Job Management and Transformations API",
+    "description": "REST API for managing provisioning jobs, retrieving job logs, and reading/updating transformations in SAP Identity Provisioning (IPS).",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{ips-host}/ips",
+      "variables": {
+        "ips-host": {
+          "description": "Your IPS tenant host",
+          "default": "your-ips-tenant.accounts.ondemand.com"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/service/systems": {
+      "get": {
+        "operationId": "listProvisioningSystems",
+        "summary": "List provisioning systems",
+        "description": "Retrieve the list of configured provisioning source systems in IPS.",
+        "responses": {
+          "200": {
+            "description": "List of provisioning systems",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SystemListResponse" }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/service/systems/{systemId}/jobs/read": {
+      "post": {
+        "operationId": "triggerReadJob",
+        "summary": "Trigger a Read provisioning job",
+        "description": "Start a Read job for the specified provisioning source system.",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "required": true,
+            "description": "The ID or name of the provisioning source system",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read job triggered successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/JobResponse" }
+              }
+            }
+          },
+          "404": { "description": "Provisioning system not found" },
+          "409": { "description": "Job already running for this system" }
+        }
+      }
+    },
+    "/service/systems/{systemId}/jobs/resync": {
+      "post": {
+        "operationId": "triggerResyncJob",
+        "summary": "Trigger a Resync provisioning job",
+        "description": "Start a Resync job for the specified provisioning source system.",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "required": true,
+            "description": "The ID or name of the provisioning source system",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resync job triggered successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/JobResponse" }
+              }
+            }
+          },
+          "404": { "description": "Provisioning system not found" },
+          "409": { "description": "Job already running for this system" }
+        }
+      }
+    },
+    "/service/systems/{systemId}/transformations": {
+      "get": {
+        "operationId": "getTransformation",
+        "summary": "Get transformation for a provisioning system",
+        "description": "Retrieve the current transformation configuration (attribute mappings and rules) for a provisioning source or target system. Used for debugging provisioning issues and reviewing mapping logic.",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "required": true,
+            "description": "The ID or name of the provisioning system",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "systemType",
+            "in": "query",
+            "required": false,
+            "description": "The type of system — source or target. Defaults to source if omitted.",
+            "schema": { "type": "string", "enum": ["source", "target"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transformation configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TransformationResponse" }
+              }
+            }
+          },
+          "404": { "description": "Provisioning system not found" }
+        }
+      },
+      "put": {
+        "operationId": "updateTransformation",
+        "summary": "Update transformation for a provisioning system",
+        "description": "Replace the transformation configuration for a provisioning source or target system. The full transformation JSON must be provided. Used to fix attribute mapping errors or adjust provisioning behaviour.",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "required": true,
+            "description": "The ID or name of the provisioning system",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "systemType",
+            "in": "query",
+            "required": false,
+            "description": "The type of system — source or target. Defaults to source if omitted.",
+            "schema": { "type": "string", "enum": ["source", "target"] }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TransformationUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transformation updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TransformationResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid transformation JSON" },
+          "404": { "description": "Provisioning system not found" }
+        }
+      }
+    },
+    "/service/systems/{systemId}/logs": {
+      "get": {
+        "operationId": "getProvisioningLogs",
+        "summary": "Get provisioning job logs for a system",
+        "description": "Retrieve recent provisioning job run logs for a specific system.",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Maximum number of log entries to return (max 100)",
+            "schema": { "type": "integer", "default": 20, "maximum": 100 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provisioning logs",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/JobLogListResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service/logs": {
+      "get": {
+        "operationId": "getAllProvisioningLogs",
+        "summary": "Get all provisioning job logs",
+        "description": "Retrieve recent provisioning job logs across all systems.",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": { "type": "integer", "default": 20, "maximum": 100 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All provisioning logs",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/JobLogListResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SystemListResponse": {
+        "type": "object",
+        "properties": {
+          "systems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "status": { "type": "string", "enum": ["active", "inactive"] }
+              }
+            }
+          }
+        }
+      },
+      "JobResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["READ", "RESYNC"] },
+          "status": { "type": "string", "enum": ["RUNNING", "SUCCESS", "ERROR", "WARNING", "SKIPPED"] },
+          "startTime": { "type": "string", "format": "date-time" },
+          "systemId": { "type": "string" }
+        }
+      },
+      "JobLogListResponse": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/JobLog" }
+          },
+          "totalResults": { "type": "integer" }
+        }
+      },
+      "JobLog": {
+        "type": "object",
+        "properties": {
+          "jobId": { "type": "string" },
+          "systemId": { "type": "string" },
+          "systemName": { "type": "string" },
+          "jobType": { "type": "string", "enum": ["READ", "RESYNC"] },
+          "status": { "type": "string", "enum": ["SUCCESS", "ERROR", "WARNING", "SKIPPED"] },
+          "startTime": { "type": "string", "format": "date-time" },
+          "endTime": { "type": "string", "format": "date-time" },
+          "entitiesRead": { "type": "integer" },
+          "entitiesCreated": { "type": "integer" },
+          "entitiesUpdated": { "type": "integer" },
+          "entitiesDeleted": { "type": "integer" },
+          "entitiesFailed": { "type": "integer" },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityId": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityId": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "TransformationResponse": {
+        "type": "object",
+        "properties": {
+          "systemId": { "type": "string" },
+          "systemType": { "type": "string", "enum": ["source", "target"] },
+          "transformation": {
+            "type": "object",
+            "description": "The full transformation configuration as a JSON object with user, group, and role mapping arrays.",
+            "properties": {
+              "user": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "sourcePath": { "type": "string" },
+                    "targetPath": { "type": "string" },
+                    "condition": { "type": "string" },
+                    "optional": { "type": "boolean" },
+                    "ignore": { "type": "boolean" }
+                  }
+                }
+              },
+              "group": {
+                "type": "array",
+                "items": { "type": "object" }
+              },
+              "role": {
+                "type": "array",
+                "items": { "type": "object" }
+              }
+            }
+          },
+          "lastModified": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TransformationUpdateRequest": {
+        "type": "object",
+        "required": ["transformation"],
+        "properties": {
+          "transformation": {
+            "type": "object",
+            "description": "The full replacement transformation configuration. Must be a valid IPS transformation JSON.",
+            "properties": {
+              "user": { "type": "array", "items": { "type": "object" } },
+              "group": { "type": "array", "items": { "type": "object" } },
+              "role": { "type": "array", "items": { "type": "object" } }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "IPS API uses basic authentication with IPS admin credentials"
+      }
+    }
+  },
+  "security": [{ "basicAuth": [] }]
+}

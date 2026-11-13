@@ -1,0 +1,12 @@
+apiVersion: solution.sap/v1
+kind: Solution
+
+metadata:
+  name: ias-administrator-assistant-2cc77
+  version: "1.0.0"
+  description: AI-powered conversational assistant to help IT helpdesk staff and IAM administrators manage users and provisioning in SAP Cloud Identity Services (IAS/IPS).
+
+assets:
+  - ref: ./assets/ias-administrator-agent/asset.yaml
+  - ref: ./assets/ias-identity-directory-mcp-server/asset.yaml
+  - ref: ./assets/ips-job-management-mcp-server/asset.yaml

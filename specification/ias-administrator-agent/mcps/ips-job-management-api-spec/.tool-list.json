@@ -1,0 +1,384 @@
+[
+  {
+    "name": "listProvisioningSystems",
+    "title": "listProvisioningSystems",
+    "description": "Retrieve the list of configured provisioning source systems in IPS.",
+    "openApiType": {
+      "operationId": "listProvisioningSystems",
+      "parameters": [],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "triggerReadJob",
+    "title": "triggerReadJob",
+    "description": "Start a Read job for the specified provisioning source system.",
+    "openApiType": {
+      "operationId": "triggerReadJob",
+      "parameters": [
+        {
+          "name": "systemId",
+          "description": "The ID or name of the provisioning source system",
+          "in": "path",
+          "newParameterName": "systemid"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "triggerResyncJob",
+    "title": "triggerResyncJob",
+    "description": "Start a Resync job for the specified provisioning source system.",
+    "openApiType": {
+      "operationId": "triggerResyncJob",
+      "parameters": [
+        {
+          "name": "systemId",
+          "description": "The ID or name of the provisioning source system",
+          "in": "path",
+          "newParameterName": "systemid"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "getTransformation",
+    "title": "getTransformation",
+    "description": "Retrieve the current transformation configuration (attribute mappings and rules) for a provisioning source or target system. Used for debugging provisioning issues and reviewing mapping logic.",
+    "openApiType": {
+      "operationId": "getTransformation",
+      "parameters": [
+        {
+          "name": "systemId",
+          "description": "The ID or name of the provisioning system",
+          "in": "path",
+          "newParameterName": "systemid"
+        },
+        {
+          "name": "systemType",
+          "description": "The type of system — source or target. Defaults to source if omitted.",
+          "in": "query",
+          "newParameterName": "systemtype"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "updateTransformation",
+    "title": "updateTransformation",
+    "description": "Replace the transformation configuration for a provisioning source or target system. The full transformation JSON must be provided. Used to fix attribute mapping errors or adjust provisioning behaviour.",
+    "openApiType": {
+      "operationId": "updateTransformation",
+      "parameters": [
+        {
+          "name": "body",
+          "description": "",
+          "newParameterName": "body"
+        },
+        {
+          "name": "systemId",
+          "description": "The ID or name of the provisioning system",
+          "in": "path",
+          "newParameterName": "systemid"
+        },
+        {
+          "name": "systemType",
+          "description": "The type of system — source or target. Defaults to source if omitted.",
+          "in": "query",
+          "newParameterName": "systemtype"
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json"
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "getProvisioningLogs",
+    "title": "getProvisioningLogs",
+    "description": "Retrieve recent provisioning job run logs for a specific system.",
+    "openApiType": {
+      "operationId": "getProvisioningLogs",
+      "parameters": [
+        {
+          "name": "systemId",
+          "description": "",
+          "in": "path",
+          "newParameterName": "systemid"
+        },
+        {
+          "name": "count",
+          "description": "Maximum number of log entries to return (max 100)",
+          "in": "query",
+          "newParameterName": "count"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "getAllProvisioningLogs",
+    "title": "getAllProvisioningLogs",
+    "description": "Retrieve recent provisioning job logs across all systems.",
+    "openApiType": {
+      "operationId": "getAllProvisioningLogs",
+      "parameters": [
+        {
+          "name": "count",
+          "description": "",
+          "in": "query",
+          "newParameterName": "count"
+        }
+      ],
+      "requestBody": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  }
+]
